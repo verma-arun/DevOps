@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  become: yes
+  become_method: enable
+  tasks:
+   - debug:
+       msg: "Install Visual Studio Playbook Started"
+   - debug:
+         msg: "Install Curl"
+   - shell: sudo apt install curl
+   - shell : curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+   - shell : sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+   - debug:
+       msg: "Added GPG Keys to system"
+   - shell : sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+   - debug:
+       msg: "Added Repo to sources" 
+   - shell : sudo apt update
+   - debug:
+       msg: " Update check to refresh packages"
+   - debug:
+       msg: "Aot command to install Visual Code"
+   - shell : sudo apt  install code
+   - debug:
+       msg: "Visual Code installed Successfully"
+   - debug:
+       msg: "Process was successfull"
+   - debug:
+       msg: "Launching code...."
+   - shell: "code&"
+   - debug:
+       msg: "Code successfully Launched"

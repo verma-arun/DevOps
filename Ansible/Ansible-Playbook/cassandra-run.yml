@@ -1,0 +1,24 @@
+---
+- name: Transfer and run Cassandra script.
+  hosts: dockerMachine
+  gather_facts: False
+  tasks:
+
+     - name: Transfer the script
+       copy: src=../cassandra/single-node/cassandra-node.yml dest=/home/docker mode=0777
+
+     - name: check file path
+       command: ls /home/docker/
+       register: ls
+
+     - debug: var=ls.stdout_lines
+
+     - name: Run cassandra in docker compose
+       command: docker-compose -f /home/docker/cassandra-node.yml up -d
+       register: docker-compose
+
+     - debug: var=docker-compose.stdout_lines
+
+     - debug: 
+         msg: Cassandra successfully running in docker-compose
+

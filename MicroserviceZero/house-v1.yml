@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+    house-app:
+        image: house:v1
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@registry_jhipster-registry:8761/eureka
+            - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@registry_jhipster-registry:8761/config
+            - SPRING_DATA_CASSANDRA_CONTACTPOINTS=database_house-cassandra
+            - JHIPSTER_REGISTRY_PASSWORD=admin
+        networks:
+        - jhipster-network
+        deploy:
+          replicas: 2
+          update_config:
+            parallelism: 1
+            delay: 60s
+            order: start-first
+          restart_policy:
+            condition: on-failure
+        ports:
+            - 8080:8080
+networks:
+  jhipster-network:
+    external: true

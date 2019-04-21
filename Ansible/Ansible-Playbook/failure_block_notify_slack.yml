@@ -1,0 +1,25 @@
+---
+ - name: Check If failed tasks are notified to slack
+   hosts: localhost
+   gather_facts: no
+   tasks:
+     - block:                # rescue will not be executed
+         - name: Check Java
+           shell: java -version
+           register: java_v
+       rescue:
+         - name: notify slack of deploy failure
+           local_action:
+             module: slack
+             token: "T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl"
+             msg: "Java Version check failed on {{inventory_hostname}}"
+     - block:
+         - name: Check Git
+           shell: git -version
+           register: git_v
+       rescue:              # rescue will be executed
+         - name: notify slack of deploy failure
+           local_action:
+             module: slack
+             token: "T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl"
+             msg: "Git Version check failed on {{inventory_hostname}}"

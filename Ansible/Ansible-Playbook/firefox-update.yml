@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  tasks:
+   - shell : echo "update firefox start"
+   - shell : echo "......"
+   - shell : apt  install firefox
+   - shell : echo "firefox updated"
+   - shell : exit
+   - shell : echo "successfully exited from root"
+   - shell : echo "process successful"

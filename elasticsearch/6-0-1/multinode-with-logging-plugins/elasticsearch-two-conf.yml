@@ -1,0 +1,10 @@
+cluster.name: simba_cluster
+node.name: "simba-es-node-two"
+node.master: false
+network.publish_host: 192.168.43.184
+network.bind_host: 0.0.0.0
+discovery.zen.ping.multicast.enabled: false
+discovery.zen.ping.unicast.hosts: ["192.168.43.184", "192.168.43.78"]
+discovery.zen.ping.timeout: 3s
+discovery.zen.minimum_master_nodes: 1
+index.query.bool.max_clause_count: 3072

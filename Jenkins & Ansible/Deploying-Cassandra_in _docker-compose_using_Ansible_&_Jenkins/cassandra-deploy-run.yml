@@ -1,0 +1,35 @@
+- name: Run Cassandra in Docker-Compose with inline v2 compose
+  hosts: localhost
+  gather_facts: yes
+  become: true
+  become_method: enable
+  vars:               # declare here variables you want with
+    - port1: "7000"   # key value pair like name: "value" for default
+    - port2: "7001"
+    - port3: "7199"
+    - port4: "9042"
+    - port5: "9160"
+  tasks:
+    - docker_service:     
+        project_name: cassandra-compose  # Name you want to Assign to Docker Stack running as Compose
+        state: present     # State is for making up and down the docker-compose container, present is for up & absent for down
+        definition:
+          version: '2'    # version of docker-compose file syntax
+          services:
+            cassandra:    # Cassandra service 
+              image: cassandra:3.9   # Name of image to Pull
+              volumes:
+                - /var/db/UrvaraApm/cassandra/:/var/lib/cassandra/data
+              ports:
+                - "{{ port1 }}:7000"  # variable ports that be supplied as arguments while running playbook
+                - "{{ port2 }}:7001"
+                - "{{ port3 }}:7199"
+                - "{{ port4 }}:9042"
+                - "{{ port5 }}:9160"
+      become: true      # For enabling Priviledge mode
+      become_method: sudo  # To run command with sudo priviledges 
+      register: output
+
+    - debug:
+        var: output
+    

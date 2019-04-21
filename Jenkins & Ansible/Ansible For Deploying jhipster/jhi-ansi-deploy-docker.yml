@@ -1,0 +1,56 @@
+---
+- name: Clone and deploy A Jhipster project using Docker compose
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+  become_user: balvinder
+  gather_facts: false
+  tasks:
+     - name: Create a directory /var/jhi-ansi
+      shell: sudo mkdir /var/jhi-ansi/ 
+      register: makeDirectory
+
+     - debug: var=makeDirectory.stdout_lines
+
+     - name: Clone the repo to /var/jhi-ansi
+       command: 'chdir=/var/jhi-ansi/ sudo git clone https://github.com/balvinder294/jhi-ansible'
+       register: gitClone
+       become_user: balvinder
+       become_method: enable
+     
+     - debug: var=gitClone.stdout_lines
+
+     - name: check cloned files
+       command: 'chdir=/var/jhi-ansi/jhi-ansible sudo ls'
+       become_user: balvinder
+       become_method: enable 
+       register: listFiles  
+
+     - debug: var=listFiles.stdout_lines
+
+     - name: make Maven as executable
+       command: 'chdir=/var/jhi-ansi/jhi-ansible/ sudo chmod +x mvnw'
+       become_user: balvinder
+       become_method: enable 
+       register: mavenExecutable
+
+     - debug: var=mavenExecutable.stdout_lines  
+
+     - name: Prepare for Production and build docker image
+       command: '"chdir=/var/jhi-project" "./mvnw package -Pprod dockerfile:build"'
+       command: 'chdir=/var/jhi-ansi/jhi-ansible/  sudo ./mvnw verify -Pprod dockerfile:build -DskipTests'
+       become_user: balvinder
+       become_method: enable 
+       register: mavenBuild
+       
+
+     - debug: var=mavenBuild.stdout_lines
+
+     - name: Run Docker-compose file to run application 
+       command: 'chdir=/var/jhi-ansi/jhi-ansible  sudo docker-compose -f src/main/docker/app.yml up -d'
+       register: dockerUp
+
+     - debug: var=dockerUp.stdout_lines
+
+     - debug:
+         msg: "Jhipster deployed successfully"

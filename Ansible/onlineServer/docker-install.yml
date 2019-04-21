@@ -1,0 +1,66 @@
+---
+- hosts: virtualServers
+  become: true
+  become_method: enable
+  tasks:
+    - name: Install Required Packages
+      command: >
+         sudo yum install -y yum-utils \
+         device-mapper-persistent-data \
+         lvm2
+      register: requiredPackages
+
+    - debug: var=requiredPackages.stdout_lines
+
+    - name: Send Required Packages status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg: 
+          - "Required packages command status :"
+          - " {{ requiredPackages.stdout_lines }}"   
+
+    - name: Set Up Stable Docker Repo
+      command: >
+          sudo yum-config-manager \
+          --add-repo \
+          https://download.docker.com/linux/centos/docker-ce.repo
+      register: stableRepo
+
+    - name: Send Stable Repo setting Status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg: 
+          - "Stable Repo status :"
+          - " {{ stableRepo.stdout_lines }}"   
+    
+    - debug: var=stableRepo.stdout_lines        
+
+    - name: Install Docker via Yum
+      command: sudo yum -y install docker-ce
+      register: dockerInstall
+
+    - name: Send Docker installation Status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg:
+          - "Docker Install command status :"
+          - " {{ dockerInstall.stdout_lines }}"   
+    
+    - debug: var=dockerInstall.stdout_lines
+
+    - debug:
+       msg: Docker Successfully installed
+
+    - name: Get Docker version
+      command: sudo docker --version
+      register: dockerVersion
+
+    - debug: var=dockerVersion.stdout_lines  
+
+    - name: Send docker version via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg:
+          - "Docker Version details"
+          - "{{ dockerVersion }}"   
+   

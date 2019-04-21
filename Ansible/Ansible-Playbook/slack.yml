@@ -1,0 +1,14 @@
+---
+- hosts: dockerMachine3
+  tasks:
+       - name: Check running processes
+         command: ps 
+         register: processes
+
+       - name: Send notification message via Slack
+         slack:
+            token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+            msg: "Process running are > '\n' {{ processes.stdout.split('\n') }}" 
+
+       - debug: 
+            msg: Notification sent successfully to slack

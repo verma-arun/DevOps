@@ -1,0 +1,11 @@
+version: '3.1'
+services:
+  zabbix-agent:
+    image: zabbix/zabbix-agent:latest
+    privileged: true
+    network_mode: "host"
+    restart: unless-stopped
+    environment:
+      - ZBX_HOSTNAME=zabbix-server
+      - ZBX_SERVER_HOST=127.0.0.1,192.168.99.1  #Replace with the IP of Zabbix server
+      - ZBX_REFRESHACTIVECHECKS=60  #Time between active checks are done , default is 2 mins(120 seconds)

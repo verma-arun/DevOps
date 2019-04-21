@@ -1,0 +1,23 @@
+---
+- name: Stop Cassandra running in Docker-compose.
+  hosts: dockerMachine
+  gather_facts: False
+  tasks:
+
+     - name: List all containers 
+       command: docker ps -a
+       register: docker
+
+     - name: container list
+       debug: var=docker.stdout_lines
+
+
+     - name: Stop Cassandra
+       command: docker-compose -f /home/docker/cassandra-node.yml down
+       register: docker-compose
+
+     - debug: var=docker-compose.stdout_lines
+
+     - debug: 
+         msg: Cassandra successfully stopped in docker-compose
+

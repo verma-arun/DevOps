@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+  become_method: enable
+  tasks:
+   - debug:
+          msg: "Install SSH server" 
+   - shell: sudo apt install ssh
+   - debug:
+                   msg: "SSH installed successfully" 

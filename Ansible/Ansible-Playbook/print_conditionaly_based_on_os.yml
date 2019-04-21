@@ -1,0 +1,31 @@
+---
+ - name: Find Os Distribution & Version Details
+   hosts: localhost
+   gather_facts: true
+   tasks:
+     - name: Echo When Ubuntu
+       shell: echo "Hi Ubuntu user"
+       register: echo_ub
+       when: ansible_distribution == "Ubuntu"
+
+     - name: Echo When CentOs
+       shell: echo "Hi CentOs user"
+       register: echo_cent
+       when: ansible_distribution == "CentOs"
+
+     - name: Echo When RedHat
+       shell: echo "Hi Redhat user"
+       register: echo_red
+       when: ansible_distribution == "RedHat"
+     
+     - debug: 
+         msg: " {{echo_ub.stdout}} "
+       when: ansible_distribution == "Ubuntu"
+
+     - debug: 
+         msg: " {{echo_cent.stdout}} "
+       when: ansible_distribution == "CentOs"
+     - debug: 
+         msg: " {{echo_red.stdout}} "
+       when: ansible_distribution == "RedHat"
+

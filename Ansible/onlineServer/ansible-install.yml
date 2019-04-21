@@ -1,0 +1,45 @@
+---
+- hosts: mainServer
+  become: true
+  become_method: enable
+  tasks:
+    - name: Install Epel Release Repo
+      command: sudo yum install epel-release
+      register: epel
+
+    - debug: var=epel.stdout_lines
+
+    - name: Send Epel Repo status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg: 
+           - "EPEL Repo command status :"
+           - " {{ epel.stdout_lines }}"   
+    
+    - name: Install Ansible via Yum
+      command: sudo yum install ansible
+      register: ansibleInstall
+
+    - name: Send Ansible installation Status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg: 
+           - "Ansible Install command status :"
+           - " {{ ansibleInstall.stdout_lines }}"   
+    
+    - debug: var=ansibleInstall.stdout_lines
+
+    - debug:
+       msg: Ansible Successfully installed
+
+    - name: Get Ansible version
+      command: ansible --version
+      register: ansibleVersion
+
+    - name: Send ansible version via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg:
+          - "Ansible Version details"
+          - "{{ ansibleVersion }}"   
+   

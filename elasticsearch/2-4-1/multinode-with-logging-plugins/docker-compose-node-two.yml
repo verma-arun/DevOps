@@ -1,0 +1,14 @@
+version: '2.0'
+services:
+  elasticsearch-two:
+    image: elasticsearch:2.4.1
+    container_name: elasticsearch-two
+    environment:
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    volumes:
+      - /var/db/elasticsearch2-4-1/data:/usr/share/elasticsearch/data
+      - ./elasticsearch-two-conf.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9200:9200
+      - 9300:9300
+    restart: always

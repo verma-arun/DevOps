@@ -1,0 +1,21 @@
+---
+- name: stop docker compose container for static_app image
+  hosts: dockerMachine3
+  gather_facts: False
+  become: true
+  tasks:
+     - name: Go to the cloned folder and execute stop command
+       command: chdir=html-image-docker-compose sudo docker-compose down
+       register: sudo
+
+     - debug: var=sudo.stdout_lines
+
+     - name: check running dockers
+       command: sudo docker ps -a
+       register: sudo
+
+     - debug: var=sudo.stdout_lines
+     
+
+     - debug:
+         msg: Successfully stopped the docker-compose

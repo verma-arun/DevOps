@@ -1,0 +1,17 @@
+version: '3.4'
+services:
+    angular-app:
+        image: my-angular-app:version2
+        networks:
+          - angular-cli-network
+        deploy:
+          replicas: 3
+          update_config:
+            parallelism: 1
+            delay: 10s
+            order: start-first
+          restart_policy:
+            condition: on-failure
+networks:
+  angular-cli-network:
+    external: true

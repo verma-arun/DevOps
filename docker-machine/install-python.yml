@@ -1,0 +1,21 @@
+---
+ - hosts: testVm
+   gather_facts: no
+   tasks:
+       
+      - name: Install Python on Docker Machine
+        raw: tce-load -wi python
+        register: tce-load
+
+
+      - debug: var=tce-load.stdout_lines
+
+      - name: Fetch and Install Pip Package
+        raw: curl https://bootstrap.pypa.io/get-pip.py | sudo python -
+        register: curl
+
+      - debug: var=curl.stdout_lines
+
+      - debug: 
+           msg: "Python Successfully installed"
+

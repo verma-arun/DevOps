@@ -1,0 +1,50 @@
+---
+- name: Clone and run A HTML project in Docker compose
+  hosts: dockerMachine3
+  gather_facts: False
+  become: true
+  tasks:
+     - name: Check current directoy
+       command: echo $PWD
+       register: echo
+
+     - debug: var=echo.stdout_lines
+
+     - name: Clone the repo to /home/docker
+       command: git clone https://github.com/balvinder294/html-image-docker-compose
+       register: git
+
+     - debug: var=git.stdout_lines
+
+     - name: check current path
+       command: echo $PWD
+    
+     - debug: var=echo.stdout_lines  
+
+     - name: check current directory
+       command: echo $PWD
+       register: echo
+
+     - debug: var=echo.stdout_lines
+      
+     - name: Build Docker Image
+       command: sudo docker build -t static_app html-image-docker-compose/
+       register: sudo
+
+     - debug: var=sudo.stdout_lines
+
+     - name: Go to the cloned folder and execute run command
+       command: chdir=html-image-docker-compose sudo docker-compose up -d
+       register: sudo
+
+     - debug: var=sudo.stdout_lines
+
+     - name: Check output by using curl
+       command: curl localhost:80
+       register: curl
+
+     - debug: var=curl.stdout_lines
+
+     - debug: 
+         msg: static_app successfully running in docker-compose
+

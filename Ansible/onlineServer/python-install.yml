@@ -1,0 +1,26 @@
+---
+ - hosts: virtualServers
+   gather_facts: no
+   become: true
+   beome_method: enable
+   tasks:
+      - name: Add Repo for Python using Yum
+        raw: sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+        register: pythonRepo
+
+      - debug: var=pythonRepo.stdout_lines
+
+      - name: Update Yum cache to refresh packages
+        raw: sudo yum update 
+        register: yumUpdate
+
+      - debug: var=yumUpdate.stdout_lines
+
+      - name: Install Python and Pip Packages
+        raw: sudo yum install -y python36u python36u-libs python36u-devel python36u-pip
+        register: pythonInstall
+
+      - debug: var=pythonInstall.stdout_lines
+
+      - debug: 
+           msg: "Python Successfully installed"

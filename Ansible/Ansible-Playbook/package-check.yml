@@ -1,0 +1,52 @@
+---
+ - name: Check Prerequisites for Jhipster
+   hosts: localhost
+   gather_facts: no
+   become: yes
+   become_user: balvinder
+   tasks:
+     - name: Check Java
+       shell: java -version
+       register: java_v
+     
+     - name: Check Git
+       shell: git --version
+       register: git_v
+
+     - name: Check Docker
+       shell: docker -v
+       register: docker_v
+
+     - name: Check Docker Compose
+       shell: docker-compose --version
+       register: docker_compose_v
+
+     - name: Check Yarn
+       shell: yarn --version
+       register: yarn_v
+
+     - name: Check Node
+       shell: node -v
+       register: node_v
+
+     - name: Check Npm
+       shell: npm -v
+       register: npm_v
+
+     - name: Print all prerequisites
+       debug:
+         msg:
+           - "JAVA version: {{ java_v.stderr_lines}} "
+           - "NPM version:  {{npm_v.stdout_lines}} "
+           - "Node version: {{node_v.stdout_lines}} "
+           - "Yarn version: {{yarn_v.stdout_lines}} "
+           - "Git version: {{git_v.stdout_lines}} "
+           - "Docker version: {{docker_v.stdout_lines}} "
+           - "Docker-Compose version: {{docker_compose_v.stdout_lines}} "
+            
+ 
+ 
+
+       
+
+

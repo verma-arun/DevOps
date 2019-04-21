@@ -1,0 +1,59 @@
+---
+- hosts: virtualServers
+  become: true
+  become_method: enable
+  tasks:
+    - name: Install Curl Packages
+      command: sudo yum install -y yum-util
+      register: curlInstall
+
+    - debug: var=curlInstall.stdout_lines
+
+    - name: Send Curl Package status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg: 
+          - "Curl Package status :"
+          - " {{ curlInstall.stdout_lines }}"   
+
+    - name: Download Latest Docker-compose version
+      command: sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+      register: dockerComposeDownload
+
+    - name: Send Docker-Compose Download Status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg: 
+          - "Docker compose download status :"
+          - " {{ dockerComposeDownload.stdout_lines }}"   
+    
+    - debug: var=dockerComposeDownload.stdout_lines        
+
+    - name: Apply executable permissions to Docker-compose binary
+      command: sudo chmod +x /usr/local/bin/docker-compose
+      register: binaryPermissionExecution
+
+    - name: Send Docker-compose Binary execution Status via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg:
+          - "Docker-compose Binary execution Permission status :"
+          - " {{ binaryPermissionExecution.stdout_lines }}"   
+    
+    - debug: var=binaryPermissionExecution.stdout_lines
+
+    - debug:
+       msg: Docker-compose successfully installed
+
+    - name: Get Docker-Compose version
+      command: sudo docker-compose --version
+      register: dockerComposeVersion
+
+    - debug: var=dockerComposeVersion.stdout_lines  
+
+    - name: Send docker compose version via Slack
+      slack:
+        token: T9WQ6P88Z/BAV79GW67/hbJNudHdwh4H8tan9Lhq1wSl
+        msg:
+          - "Docker Compose Version details"
+          - "{{ dockerComposeVersion }}"

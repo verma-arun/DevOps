@@ -1,0 +1,11 @@
+---
+ - name: Find Os Distribution & Version Details
+   hosts: localhost
+   gather_facts: true
+   tasks:
+     - name: Information for OS of localhost
+       debug:
+         msg:
+           - "OS Family : {{ansible_os_family}} "
+           - "OS Distribution: {{ansible_distribution}} "
+           - "OS Version : {{ansible_distribution_major_version}} "

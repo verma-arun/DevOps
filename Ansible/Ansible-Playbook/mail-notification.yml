@@ -1,0 +1,19 @@
+---
+- hosts: dockerMachine3
+  tasks:
+       - name: Check running processes
+         command: ps -a
+         register: processes
+       
+       - name: Sending an e-mail using Gmail SMTP servers
+         mail:
+            host: smtp.gmail.com
+            port: 587
+            username: simbalabs09@gmail.com
+            password: UrvaraApm
+            to: Balvinder Singh <balvinder294@gmail.com>
+            subject: Ansible-report for running processes in system
+            body: "Process running are > '\n' {{ processes.stdout.split('\n') }}"
+
+       - debug: 
+            msg: Notification sent successfully to email
